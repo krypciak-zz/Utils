@@ -189,6 +189,32 @@ public class Utils {
 		return splited;
 	}
 
+	public static String[] getArrayElementsFromString(String str, char befE, char aftE, RuntimeException e) {
+		if(str.isBlank())
+			return new String[] {};
+
+		ArrayList<String> list = new ArrayList<>();
+		char[] charA = str.toCharArray();
+		boolean reading = false;
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < charA.length; i++) {
+			char c = charA[i];
+			if(c == befE) {
+				if(reading)
+					throw e;
+				reading = true;
+			} else if(c == aftE) {
+				if(!reading)
+					throw e;
+				reading = false;
+				list.add(sb.toString());
+				sb = new StringBuilder();
+			} else if(reading)
+				sb.append(c);
+		}
+		return list.toArray(String[]::new);
+	}
+
 	public static String arrayToString(Object[] array, char opening, char closing, String sepe) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(opening);
@@ -206,8 +232,8 @@ public class Utils {
 
 	public static String arrayToString(Object[] array, char befE, char aftE) {
 		StringBuilder sb = new StringBuilder();
-		int _arrayLen = array.length - 1;
 		for (int i = 0; i < array.length; i++) { sb.append(befE); sb.append(array[i].toString()); sb.append(aftE); }
 		return sb.toString();
 	}
+
 }

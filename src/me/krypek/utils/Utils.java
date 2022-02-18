@@ -215,6 +215,40 @@ public class Utils {
 		return list.toArray(String[]::new);
 	}
 
+	public interface Generator<T> {
+		public T get(String str);
+	}
+
+	public static <T> T[] getArrayElementsFromString(String str, Generator<T> gen, T[] emptyArray, char befE, char aftE, RuntimeException e) {
+		if(str.isBlank())
+			return listOf().toArray(emptyArray);
+
+		ArrayList<T> list = new ArrayList<>();
+		char[] charA = str.toCharArray();
+		boolean reading = false;
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < charA.length; i++) {
+			char c = charA[i];
+			if(c == befE) {
+				if(reading)
+					throw e;
+				reading = true;
+			} else if(c == aftE) {
+				if(!reading)
+					throw e;
+				reading = false;
+				try {
+					list.add(gen.get(sb.toString()));
+				} catch (Exception e1) {
+					throw e;
+				}
+				sb = new StringBuilder();
+			} else if(reading)
+				sb.append(c);
+		}
+		return list.toArray(emptyArray);
+	}
+
 	public static String arrayToString(Object[] array, char opening, char closing, String sepe) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(opening);

@@ -249,7 +249,7 @@ public class Utils {
 		return list.toArray(emptyArray);
 	}
 
-	public static String arrayToString(Object[] array, char opening, char closing, String sepe) {
+	public static <T> String arrayToString(T[] array, char opening, char closing, String sepe) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(opening);
 		int _arrayLen = array.length - 1;
@@ -264,10 +264,21 @@ public class Utils {
 		return sb.toString();
 	}
 
-	public static String arrayToString(Object[] array, char befE, char aftE) {
+	public static <T> String arrayToString(T[] array, char befE, char aftE) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) { sb.append(befE); sb.append(array[i].toString()); sb.append(aftE); }
 		return sb.toString();
 	}
 
+	public static String arrayToString(int[] array, char befE, char aftE) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) { sb.append(befE); sb.append(array[i]); sb.append(aftE); }
+		return sb.toString();
+	}
+
+	public static String arrayToString(double[] array, char befE, char aftE) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) { sb.append(befE); sb.append(array[i]); sb.append(aftE); }
+		return sb.toString();
+	}
 }

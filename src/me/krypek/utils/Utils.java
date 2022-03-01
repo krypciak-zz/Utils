@@ -180,13 +180,41 @@ public class Utils {
 	}
 
 	public static String[] getArrayElementsFromString(String str, char opening, char closing, String sepe) {
-		String sub = str.substring(str.indexOf(opening) + 1, str.indexOf(closing));
+		String sub = str.substring(str.indexOf(opening) + 1, str.lastIndexOf(closing));
 		if(sub.isBlank())
 			return new String[] {};
 		String[] splited = sub.split(sepe);
 		for (int i = 0; i < splited.length; i++)
 			splited[i] = splited[i].strip();
 		return splited;
+	}
+
+	public static String[] getArrayElementsFromStringIgnoreBrackets(String str, char opening, char closing, char sepe) {
+		str = str.substring(str.indexOf(opening) + 1, str.lastIndexOf(closing));
+		if(str.isBlank())
+			return new String[] {};
+
+		ArrayList<String> list = new ArrayList<>();
+		char[] charA = str.toCharArray();
+		StringBuilder sb = new StringBuilder();
+		int bracket = 0;
+		for (char c : charA) {
+			if(c == opening) {
+				bracket++;
+				sb.append(c);
+			} else if(c == closing) {
+				bracket--;
+				sb.append(c);
+			} else if(c == sepe && bracket == 0) {
+				list.add(sb.toString().strip());
+				sb = new StringBuilder();
+			} else if(!Character.isWhitespace(c)) {
+				sb.append(c);
+			}
+		}
+		if(!sb.isEmpty())
+			list.add(sb.toString());
+		return list.toArray(String[]::new);
 	}
 
 	public static String[] getArrayElementsFromString(String str, char befE, char aftE, RuntimeException e) {
@@ -215,11 +243,12 @@ public class Utils {
 		return list.toArray(String[]::new);
 	}
 
-	public interface Generator<T> {
-		public T get(String str);
+	public interface Generator<T, G> {
+		public T get(G str);
 	}
 
-	public static <T> T[] getArrayElementsFromString(String str, Generator<T> gen, T[] emptyArray, char befE, char aftE, RuntimeException e) {
+	public static <T> T[] getArrayElementsFromString(String str, Generator<T, String> gen, T[] emptyArray, char befE, char aftE,
+			Generator<RuntimeException, Exception> egen) {
 		if(str.isBlank())
 			return listOf().toArray(emptyArray);
 
@@ -231,16 +260,16 @@ public class Utils {
 			char c = charA[i];
 			if(c == befE) {
 				if(reading)
-					throw e;
+					throw egen.get(new Exception("Expected \'" + aftE + "\'"));
 				reading = true;
 			} else if(c == aftE) {
 				if(!reading)
-					throw e;
+					throw egen.get(new Exception("Expected \'" + befE + "\'"));
 				reading = false;
 				try {
 					list.add(gen.get(sb.toString()));
 				} catch (Exception e1) {
-					throw e;
+					throw egen.get(e1);
 				}
 				sb = new StringBuilder();
 			} else if(reading)
@@ -270,6 +299,12 @@ public class Utils {
 		return sb.toString();
 	}
 
+	public static <T> String arrayToString(T[] array, String sepe) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) { sb.append(array[i].toString()); sb.append(sepe); }
+		return sb.toString();
+	}
+
 	public static String arrayToString(int[] array, char befE, char aftE) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) { sb.append(befE); sb.append(array[i]); sb.append(aftE); }
@@ -281,4 +316,11 @@ public class Utils {
 		for (int i = 0; i < array.length; i++) { sb.append(befE); sb.append(array[i]); sb.append(aftE); }
 		return sb.toString();
 	}
+
+	public static void printStackTrace() {
+		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+
+		for (int i = 0; i < elements.length; i++) { System.out.println(elements[i]); }
+	}
+
 }

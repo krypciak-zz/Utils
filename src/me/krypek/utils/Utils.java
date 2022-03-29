@@ -317,10 +317,40 @@ public class Utils {
 		return sb.toString();
 	}
 
+	public static <T> String arrayToString(T[][] array, String sepe1, String sepe2) {
+		StringBuilder sb = new StringBuilder(128);
+
+		for (int i = 0; i < array.length; i++) {
+			for (int x = 0; x < array[i].length; x++) {
+				sb.append(array[i][x]);
+				if(x + 1 != array[i].length)
+					sb.append(sepe1);
+			}
+			sb.append(sepe2);
+		}
+		return sb.toString();
+	}
+
+	public static String arrayToString(int[][] array, String sepe1, String sepe2) {
+		StringBuilder sb = new StringBuilder(128);
+
+		for (int i = 0; i < array.length; i++) {
+			for (int x = 0; x < array[i].length; x++) {
+				sb.append(array[i][x]);
+				if(x + 1 != array[i].length)
+					sb.append(sepe1);
+			}
+			sb.append(sepe2);
+		}
+		return sb.toString();
+	}
+
 	public static void printStackTrace() {
 		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
 
 		for (int i = 0; i < elements.length; i++) { System.out.println(elements[i]); }
 	}
+
+	public static String getFileName(String path) { return new File(path).getName(); }
 
 }

@@ -103,15 +103,17 @@ public class Utils {
 	}
 
 	public static String getFileNameWithoutExtension(String name) {
-		if(!name.contains("."))
-			return name;
-		return name.substring(0, name.lastIndexOf('.'));
+		int dotindex = name.indexOf('.');
+		if(dotindex == -1)
+			return "";
+		return name.substring(0, dotindex);
 	}
 
 	public static String getFileExtension(String name) {
-		if(!name.contains("."))
+		int dotindex = name.indexOf('.');
+		if(dotindex == -1)
 			return "";
-		return name.substring(name.lastIndexOf('.') + 1);
+		return name.substring(dotindex + 1);
 	}
 
 	public static Integer parseInt(String str) {

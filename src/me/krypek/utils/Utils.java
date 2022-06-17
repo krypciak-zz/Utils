@@ -243,12 +243,12 @@ public class Utils {
 		return list.toArray(String[]::new);
 	}
 
-	public interface Generator<T, G> {
+	public interface Generator<G, T> {
 		public T get(G str);
 	}
 
-	public static <T> T[] getArrayElementsFromString(String str, Generator<T, String> gen, T[] emptyArray, char befE, char aftE,
-			Generator<RuntimeException, Exception> egen) {
+	public static <T> T[] getArrayElementsFromString(String str, Generator<String, T> gen, T[] emptyArray, char befE, char aftE,
+			Generator<Exception, RuntimeException> egen) {
 		if(str.isBlank())
 			return listOf().toArray(emptyArray);
 

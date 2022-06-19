@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -167,6 +168,22 @@ public class Utils {
 	public static <T> T deserialize(String path) {
 		try {
 			FileInputStream file = new FileInputStream(path);
+			ObjectInputStream in = new ObjectInputStream(file);
+
+			@SuppressWarnings("unchecked")
+			T obj = (T) in.readObject();
+
+			in.close();
+			file.close();
+			return obj;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static <T> T deserialize(InputStream file) {
+		try {
 			ObjectInputStream in = new ObjectInputStream(file);
 
 			@SuppressWarnings("unchecked")

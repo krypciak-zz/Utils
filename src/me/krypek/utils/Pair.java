@@ -1,8 +1,11 @@
 package me.krypek.utils;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Pair<K, V> {
+public class Pair<K, V> implements Serializable {
+	private static final long serialVersionUID = -1117001897695490806L;
+	
 	private K first;
 	private V second;
 

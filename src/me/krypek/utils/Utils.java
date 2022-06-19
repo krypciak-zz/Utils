@@ -303,7 +303,11 @@ public class Utils {
 
 	public static <T> String arrayToString(T[] array, String sepe) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < array.length; i++) { sb.append(array[i].toString()); sb.append(sepe); }
+		for (int i = 0; i < array.length; i++) {
+			sb.append(array[i].toString());
+			if(i != array.length - 1)
+				sb.append(sepe);
+		}
 		return sb.toString();
 	}
 

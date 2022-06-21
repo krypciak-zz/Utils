@@ -227,7 +227,7 @@ public class Utils {
 			} else if(c == sepe && bracket == 0) {
 				list.add(sb.toString().strip());
 				sb = new StringBuilder();
-			} else if(!Character.isWhitespace(c)) {
+			} else {
 				sb.append(c);
 			}
 		}

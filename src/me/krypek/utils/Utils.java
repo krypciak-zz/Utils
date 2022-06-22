@@ -104,14 +104,14 @@ public class Utils {
 	}
 
 	public static String getFileNameWithoutExtension(String name) {
-		int dotindex = name.indexOf('.');
+		int dotindex = name.lastIndexOf('.');
 		if(dotindex == -1)
 			return "";
 		return name.substring(0, dotindex);
 	}
 
 	public static String getFileExtension(String name) {
-		int dotindex = name.indexOf('.');
+		int dotindex = name.lastIndexOf('.');
 		if(dotindex == -1)
 			return "";
 		return name.substring(dotindex + 1);

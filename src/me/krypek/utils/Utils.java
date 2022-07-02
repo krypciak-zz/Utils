@@ -94,6 +94,7 @@ public class Utils {
 
 	public static void writeIntoFile(String path, String content) {
 		try {
+			new File(path).getParentFile().mkdirs();
 			PrintWriter pw = new PrintWriter(path);
 			pw.println(content);
 			pw.close();

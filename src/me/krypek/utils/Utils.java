@@ -376,4 +376,88 @@ public class Utils {
 
 	public static String getFileName(String path) { return new File(path).getName(); }
 
+	// ----
+
+	public static String stringReplaceAll(String str, String[] searchA, String[] replaceA) { return stringReplaceAll(str, searchA, replaceA, false); }
+
+	private static String stringReplaceAll(String str, String[] searchA, String[] replaceA, boolean repeat) {
+		final int sLen = searchA.length;
+		final int rLen = replaceA.length;
+		if(sLen != rLen)
+			throw new IllegalArgumentException("stringReplaceAll: search array isn't the same size as the replece array.");
+
+		if(str.isBlank())
+			return str;
+
+		boolean[] noMoreMatchesForReplIndex = new boolean[sLen];
+
+		int textIndex = -1;
+		int replaceIndex = -1;
+		int t1;
+
+		for (int i = 0; i < sLen; i++) {
+			if(searchA[i].isBlank() || noMoreMatchesForReplIndex[i] || replaceA[i] == null)
+				continue;
+
+			t1 = str.indexOf(searchA[i]);
+
+			if(t1 == -1) {
+				noMoreMatchesForReplIndex[i] = true;
+			} else if(textIndex == -1 || t1 < textIndex) {
+				textIndex = t1;
+				replaceIndex = i;
+			}
+		}
+		if(textIndex == -1)
+			return str;
+
+		int start = 0, inc = 0;
+
+		for (int i = 0; i < searchA.length; i++) {
+			if(searchA[i] == null || replaceA[i] == null)
+				continue;
+
+			int greater = replaceA[i].length() - searchA[i].length();
+			if(greater > 0)
+				inc += 3 * greater;
+		}
+		inc = Math.min(inc, str.length() / 5);
+
+		StringBuilder sb = new StringBuilder(str.length() + inc);
+
+		while (textIndex != -1) {
+			for (int i = start; i < textIndex; i++)
+				sb.append(str.charAt(i));
+			sb.append(replaceA[replaceIndex]);
+
+			start = textIndex + searchA[replaceIndex].length();
+
+			textIndex = -1;
+			replaceIndex = -1;
+			for (int i = 0; i < sLen; i++) {
+				if(noMoreMatchesForReplIndex[i] || searchA[i] == null || searchA[i].isEmpty() || replaceA[i] == null)
+					continue;
+
+				t1 = str.indexOf(searchA[i], start);
+
+				if(t1 == -1) {
+					noMoreMatchesForReplIndex[i] = true;
+				} else if(textIndex == -1 || t1 < textIndex) {
+					textIndex = t1;
+					replaceIndex = i;
+				}
+			}
+
+		}
+		int textLength = str.length();
+		for (int i = start; i < textLength; i++)
+			sb.append(str.charAt(i));
+
+		String result = sb.toString();
+		if(!repeat)
+			return result;
+
+		return stringReplaceAll(result, searchA, replaceA, repeat);
+	}
+
 }

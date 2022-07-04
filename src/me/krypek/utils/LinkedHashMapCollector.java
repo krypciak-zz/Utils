@@ -67,7 +67,7 @@ public class LinkedHashMapCollector<T, K, V, R> implements Collector<T, LinkedHa
 	public BinaryOperator<LinkedHashMap<K, V>> combiner() { return combiner; }
 
 	@Override
-	public Function<LinkedHashMap<K, V>, java.util.LinkedHashMap<K, V>> finisher() { return i -> i; }
+	public Function<LinkedHashMap<K, V>, LinkedHashMap<K, V>> finisher() { return i -> i; }
 
 	@Override
 	public Set<Characteristics> characteristics() { return Set.of(Collector.Characteristics.IDENTITY_FINISH); }

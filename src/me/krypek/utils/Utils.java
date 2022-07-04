@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -316,12 +317,8 @@ public class Utils {
 		return list.toArray(String[]::new);
 	}
 
-	public interface Generator<G, T> {
-		public T get(G str);
-	}
-
-	public static <T> T[] getArrayElementsFromString(String str, Generator<String, T> gen, T[] emptyArray, char befE, char aftE,
-			Generator<Exception, RuntimeException> egen) {
+	public static <T> T[] getArrayElementsFromString(String str, Function<String, T> gen, T[] emptyArray, char befE, char aftE,
+			Function<Exception, RuntimeException> egen) {
 		if(str.isBlank())
 			return listOf().toArray(emptyArray);
 
@@ -333,16 +330,16 @@ public class Utils {
 			char c = charA[i];
 			if(c == befE) {
 				if(reading)
-					throw egen.get(new Exception("Expected \'" + aftE + "\'"));
+					throw egen.apply(new Exception("Expected \'" + aftE + "\'"));
 				reading = true;
 			} else if(c == aftE) {
 				if(!reading)
-					throw egen.get(new Exception("Expected \'" + befE + "\'"));
+					throw egen.apply(new Exception("Expected \'" + befE + "\'"));
 				reading = false;
 				try {
-					list.add(gen.get(sb.toString()));
+					list.add(gen.apply(sb.toString()));
 				} catch (Exception e1) {
-					throw egen.get(e1);
+					throw egen.apply(e1);
 				}
 				sb = new StringBuilder();
 			} else if(reading)

@@ -12,6 +12,9 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +35,45 @@ public class Utils {
 		for (T arg : args)
 			list.add(arg);
 		return list;
+	}
+
+	@SafeVarargs
+	public static <T> HashSet<T> setOf(T... args) {
+		HashSet<T> set = new HashSet<>();
+		for (T arg : args)
+			set.add(arg);
+		return set;
+	}
+
+	@SafeVarargs
+	public static <T> LinkedHashSet<T> linkedSetOf(T... args) {
+		LinkedHashSet<T> set = new LinkedHashSet<>();
+		for (T arg : args)
+			set.add(arg);
+		return set;
+	}
+
+	public static <K, V> LinkedHashMap<K, V> linkedHashMapOf() { return new LinkedHashMap<>(); }
+
+	public static <K, V> LinkedHashMap<K, V> linkedHashMapOf(K k1, V v1) {
+		LinkedHashMap<K, V> map = new LinkedHashMap<>();
+		map.put(k1, v1);
+		return map;
+	}
+
+	public static <K, V> LinkedHashMap<K, V> linkedHashMapOf(K k1, V v1, K k2, V v2) {
+		LinkedHashMap<K, V> map = new LinkedHashMap<>();
+		map.put(k1, v1);
+		map.put(k2, v2);
+		return map;
+	}
+
+	public static <K, V> LinkedHashMap<K, V> linkedHashMapOf(K k1, V v1, K k2, V v2, K k3, V v3) {
+		LinkedHashMap<K, V> map = new LinkedHashMap<>();
+		map.put(k1, v1);
+		map.put(k2, v2);
+		map.put(k3, v3);
+		return map;
 	}
 
 	public static String exceptionToString(Exception e) {
@@ -124,6 +166,17 @@ public class Utils {
 			if(d % 1 == 0)
 				return (int) d;
 		} catch (Exception e) {}
+		return null;
+	}
+
+	public static Integer parseIntError(String str) {
+		try {
+			double d = Double.parseDouble(str);
+			if(d % 1 == 0)
+				return (int) d;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -460,5 +513,4 @@ public class Utils {
 
 		return stringReplaceAll(result, searchA, replaceA, repeat);
 	}
-
 }
